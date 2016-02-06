@@ -1,0 +1,12 @@
+Package: domino
+Version: 0.2-7
+Type: Package
+Title: R Console Bindings for the 'Domino Command-Line Client'
+Date: 2015-05-27
+Author: Jacek Glodek <jacek@theiterators.com>
+Maintainer: Nick Elprin <nick@dominoup.com>
+Copyright: Domino Data Lab Inc.
+Description: A wrapper on top of the 'Domino Command-Line Client'. It lets you run 'Domino' commands (e.g., "run", "upload", "download") directly from your R environment. Under the hood, it uses R's system function to run the 'Domino' executable, which must be installed as a prerequisite. 'Domino' is a service that makes it easy to run your code on scalable hardware, with integrated version control and collaboration features designed for analytical workflows (see <http://www.dominoup.com> for more information).
+License: MIT + file LICENSE
+SystemRequirements: domino (~>1.7.1)
+URL: http://www.dominoup.com/

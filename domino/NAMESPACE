@@ -1,0 +1,13 @@
+export(domino.runCommand,
+  domino.login,
+  domino.create,
+  domino.get,
+  domino.init,
+  domino.debug,
+  domino.diff,
+  domino.upload,
+  domino.download,
+  domino.reset,
+  domino.run,
+  domino.status,
+  domino.sync)
