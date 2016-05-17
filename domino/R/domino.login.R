@@ -39,9 +39,9 @@ domino.login <- function(usernameOrEmail, password, approvalForSendingErrorRepor
 
   if(missing(usernameOrEmail)) {
     if(interactive()){
-      stop("Missing parameters for login command. Proper usage: domino.login(usernameOrEmail, approvalForSendingErrorReports)")
+      stop("Missing parameters for login command. Proper usage: domino.login(usernameOrEmail, approvalForSendingErrorReports, host)")
     } else {
-      stop("Missing parameters for login command. Proper usage: domino.login(usernameOrEmail, passwrod approvalForSendingErrorReports)")  
+      stop("Missing parameters for login command. Proper usage: domino.login(usernameOrEmail, password, approvalForSendingErrorReports, host)")
     }
   }
 
@@ -62,6 +62,10 @@ domino.login <- function(usernameOrEmail, password, approvalForSendingErrorRepor
   theinput = paste(usernameOrEmail, '\n', password, '\n', approvalChar, sep="")
 
   loginCommand <- "login"
+
+  if(missing(host)) {
+    warning("You did not provide a host. Starting in June 2016, the CLI will not automatically determine the host for you.")
+  }
 
   if(!missing(host)){
     loginCommand <- paste(loginCommand, host, sep=" ")
