@@ -1,0 +1,12 @@
+language: r
+warnings_are_errors: false
+r_packages:
+  - testthat
+before_install:
+  - cd domino
+  - curl -L https://app.dominodatalab.com/download/client/unix > /tmp/domino_cli.sh
+  - echo -e '\n\n' | /bin/bash /tmp/domino_cli.sh
+notifications:
+  email: false
+env:
+  - secure: "Y4dMYUJXzF51+9BCa4YD1vvmp2883pXgM/JoDEESbYZHs0uYIX41Ih8+0xHpD0nf+h3rKzFPv+wXodX08kDHsun3IBNEnPc0jacNC5CMB56+Ss+FTRZoyQkDVQHlTRuSCXeoQyEC3pn0J4ZlBs8K6Kl83svz7YhfqCTLl7tVoFEoZcZgoaep2YdM5lHbIkSzsWZp8XKMNMZbTLEFjtbvLOKd3t+NeFAjG4yoHbMyAkNQFeMeg3cgUKrIWH3eMlp1g1XbW8vazMQilIRZZYUo5dNQEejQrRziKjvwuuJdJemMDverd2lN8gINRfLsKfzaE26WPrIHFeF4b5TiUEQj2BSyqcbuSAiyGzB9UybP+pvzHxaHrDnJfRpZ57hLUhV3lDOLIMXCon0l1KnxHu8N+fCIk7l+KI23fWs72/uIwK1vMf+0MlgU9bRvw1Z+Oj/lhuqgLTOpSlboP8SjbJN7WAzSBqy5hCnAzVkxN3hvIVMjaGWvnMQu68JLFf54Tntd+o3rRTHkbuL1aGOXqENJJh/2NOm+hoDIfn2Ntr+s4A6Xz2Y9p4NPPAfT5B6F7ZVzwFtBUXlMNM7ODvstjfGhkK3/M6nZaFYB8DZiZUxTGWMGClsHt9E1PY+nszvqQ0ugdID3vQB4CFln4aachaaAxmBIS0DhROH6FMHxK2QCfq4="

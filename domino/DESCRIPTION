@@ -17,3 +17,4 @@ License: MIT + file LICENSE
 SystemRequirements: domino (~>1.7.1)
 URL: http://www.dominoup.com/
 RoxygenNote: 5.0.1
+Suggests: testthat
