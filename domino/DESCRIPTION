@@ -13,7 +13,7 @@ Description: A wrapper on top of the 'Domino Command-Line Client'. It lets you
     that makes it easy to run your code on scalable hardware, with integrated
     version control and collaboration features designed for analytical workflows
     (see <http://www.dominoup.com> for more information).
-License: MIT + file LICENSE
+License: MIT
 SystemRequirements: domino (~>1.7.1)
 URL: http://www.dominoup.com/
 RoxygenNote: 5.0.1
