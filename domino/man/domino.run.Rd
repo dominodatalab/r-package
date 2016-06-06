@@ -9,6 +9,8 @@ domino.run(..., publishApiEndpoint=FALSE)
 \arguments{
 \item{...}{All the run arguments will be joined together using space character.
 Ex. \code{domino.run("main.py", "-xvz", "my-file1.csv")}}
+
+\item{publishApiEndpoint}{Whether or not to republish the project's API endpoint at the end of the run.}
 }
 \description{
 Runs your project on Domino servers with given parameters.

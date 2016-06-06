@@ -7,6 +7,8 @@
 #'
 #' @param ... All the run arguments will be joined together using space character.
 #' Ex. \code{domino.run("main.py", "-xvz", "my-file1.csv")}
+#'
+#'
 #' @param publishApiEndpoint Whether or not to republish the project's API endpoint at the end of the run.
 #'
 #' @examples
