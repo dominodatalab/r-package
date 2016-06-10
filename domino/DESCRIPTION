@@ -1,8 +1,8 @@
 Package: domino
-Version: 0.2-7
+Version: 0.3.0
 Type: Package
 Title: R Console Bindings for the 'Domino Command-Line Client'
-Date: 2015-05-27
+Date: 2016-06-10
 Author: Jacek Glodek <jacek@theiterators.com>
 Maintainer: Nick Elprin <nick@dominodatalab.com>
 Copyright: Domino Data Lab Inc.
@@ -18,3 +18,4 @@ SystemRequirements: domino (~>1.7.1)
 URL: http://www.dominodatalab.com
 RoxygenNote: 5.0.1
 Suggests: testthat
+Imports: utils, grDevices

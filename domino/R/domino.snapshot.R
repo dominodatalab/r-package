@@ -1,10 +1,13 @@
 #' @title domino.snapshot
 #' @name domino.snapshot
-#' 
+#'
 #' @description take a snapshot of your command history and workspace.
-#' 
+#'
 #' @param commitMessage A committ message to record with you snapshot
-#' 
+#'
+#' @import grDevices
+#' @import utils
+#'
 #' @export
 
 
@@ -30,4 +33,3 @@ domino.snapshot <- function(commitMessage) {
 
     domino.upload(commitMessage)
 }
-
