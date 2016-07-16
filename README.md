@@ -12,7 +12,7 @@ The Domino R package can be installed from CRAN directly using the `install.pack
 install.packages("domino")
 ```
 
-You can likewise manually obtain a tarball of the package and install it directly:
+You can likewise manually obtain a tarball of the package from CRAN and install it directly:
 
 ```
 R CMD install domino_X.Y.tar.gz
@@ -36,6 +36,10 @@ domino.run("main.r", "--secret-arg")
 # Download changes from the domino server.
 domino.download()
 ```
+
+Full documentation and usage information is available in the manuals for various releases:
+
+* [Release 0.3.0](https://github.com/dominodatalab/r-package/blob/master/man/domino-manual-0.3.0.pdf)
 
 ## Known Bugs
 
