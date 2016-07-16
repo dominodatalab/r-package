@@ -6,18 +6,34 @@ CLI in [this support article](http://support.dominodatalab.com/hc/en-us/articles
 
 ## Installation
 
+The Domino R package can be installed from CRAN directly using the `install.packages` command:
+
+```R
+install.packages("domino")
+```
+
+You can likewise manually obtain a tarball of the package and install it directly:
+
 ```
 R CMD install domino_X.Y.tar.gz
 ```
 
 ## Usage
 
-```
+```R
 library(domino)
 
-domino.login("jglodek", "secret_password")
+# Login with your username and password, specifying whether or not to permit usage reports and the
+# hostname of your Domino install. For example:
+domino.login("jglodek", "secret_password", FALSE, "https://trial.dominodatalab.com")
+
+# Get the my-magic-project project from your Domino install
 domino.get("my-magic-project")
+
+# Trigger a run with some parameters
 domino.run("main.r", "--secret-arg")
+
+# Download changes from the domino server.
 domino.download()
 ```
 
