@@ -46,9 +46,6 @@ domino.jumpToProjectsWorkingDirectory <- function(projectName) {
   print("Changed working directory to new project's directory.")
 }
 
-
-# Checks whether domino is in the system's path, by running a 'dummy' command.
-# If the result is an error, domino it's safe to assume that domino is not found
 .is.domino.in.path <- function() {
   nzchar(Sys.which("domino")) 
 }
