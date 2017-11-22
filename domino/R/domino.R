@@ -50,15 +50,7 @@ domino.jumpToProjectsWorkingDirectory <- function(projectName) {
 # Checks whether domino is in the system's path, by running a 'dummy' command.
 # If the result is an error, domino it's safe to assume that domino is not found
 .is.domino.in.path <- function() {
-  result <- try(
-    nzchar(Sys.which("domino help")), 
-    silent = TRUE
-    )
-  if(!inherits(result, "try-error") && result != 127) {
-    TRUE
-  } else {
-    FALSE
-  }
+  nzchar(Sys.which("domino")) 
 }
 
 .open.rStudio.login.prompt <- function(message){
