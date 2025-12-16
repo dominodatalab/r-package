@@ -115,6 +115,14 @@ domino.run <- function(..., publishApiEndpoint = FALSE, project = NULL,
     }
   }
   
+  # Validate and sanitize inputs
+  project <- .domino.validate.project.name(project)
+  owner <- .domino.validate.owner(owner)
+  commitId <- .domino.validate.commit.id(commitId)
+  if (!is.null(title)) {
+    title <- .domino.validate.title(title)
+  }
+  
   # Get projectId from project name and owner
   # We need to look up the project ID using the API
   project_id <- .domino.get.project.id(owner, project)
@@ -122,11 +130,8 @@ domino.run <- function(..., publishApiEndpoint = FALSE, project = NULL,
     stop(paste("Could not find project '", project, "' for owner '", owner, "'. Please verify the project name and owner.", sep = ""))
   }
   
-  # Build command from arguments
-  # Convert all arguments to strings and join them
-  cmd_parts <- vapply(args, function(x) {
-    if (is.character(x)) x else as.character(x)
-  }, character(1))
+  # Build command from arguments - sanitize inputs
+  cmd_parts <- .domino.sanitize.command(args)
   
   # Join command parts with spaces to form a single command string
   # For R scripts, check if we need to add Rscript
@@ -148,7 +153,7 @@ domino.run <- function(..., publishApiEndpoint = FALSE, project = NULL,
     runCommand = run_command
   )
   
-  # Add optional fields
+  # Add optional fields (commitId already validated)
   if (!is.null(commitId) && commitId != "master") {
     payload$commitId <- commitId
   }

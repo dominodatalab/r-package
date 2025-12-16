@@ -211,3 +211,125 @@ domino_api <- new.env()
   if (is.null(x)) y else x
 }
 
+# Validate and sanitize inputs for API requests
+.domino.validate.project.name <- function(project_name) {
+  if (is.null(project_name) || !is.character(project_name) || nchar(project_name) == 0) {
+    stop("Project name must be a non-empty string")
+  }
+  
+  # Remove leading/trailing whitespace
+  project_name <- trimws(project_name)
+  
+  # Check for path traversal attempts or other dangerous patterns
+  if (grepl("[/\\\\\\.\\.]", project_name)) {
+    stop("Project name contains invalid characters (/, \\, or ..)")
+  }
+  
+  # Check length (reasonable limit)
+  if (nchar(project_name) > 255) {
+    stop("Project name is too long (max 255 characters)")
+  }
+  
+  return(project_name)
+}
+
+.domino.validate.owner <- function(owner) {
+  if (is.null(owner) || !is.character(owner) || nchar(owner) == 0) {
+    stop("Owner must be a non-empty string")
+  }
+  
+  # Remove leading/trailing whitespace
+  owner <- trimws(owner)
+  
+  # Check for dangerous patterns
+  if (grepl("[/\\\\\\.\\.]", owner)) {
+    stop("Owner name contains invalid characters (/, \\, or ..)")
+  }
+  
+  # Check length
+  if (nchar(owner) > 255) {
+    stop("Owner name is too long (max 255 characters)")
+  }
+  
+  return(owner)
+}
+
+.domino.validate.commit.id <- function(commit_id) {
+  if (is.null(commit_id)) {
+    return(NULL)
+  }
+  
+  if (!is.character(commit_id)) {
+    stop("Commit ID must be a string")
+  }
+  
+  commit_id <- trimws(commit_id)
+  
+  # Commit IDs are typically hex strings (SHA-1 or SHA-256)
+  # Allow branch/tag names too (letters, numbers, underscores, hyphens, forward slashes, dots)
+  # Note: hyphen must be at end of character class to be literal (not interpreted as range)
+  if (!grepl("^[a-fA-F0-9]{7,64}$|^[a-zA-Z0-9_/.-]+$", commit_id)) {
+    warning("Commit ID format may be invalid. Expected SHA hash or branch/tag name.")
+  }
+  
+  # Check length
+  if (nchar(commit_id) > 255) {
+    stop("Commit ID is too long (max 255 characters)")
+  }
+  
+  return(commit_id)
+}
+
+.domino.validate.title <- function(title) {
+  if (is.null(title)) {
+    return(NULL)
+  }
+  
+  if (!is.character(title)) {
+    stop("Title must be a string")
+  }
+  
+  title <- trimws(title)
+  
+  # Check for control characters (except newlines/tabs which might be acceptable)
+  # Check for null bytes separately to avoid linter issues
+  if (any(charToRaw(title) < 32L & charToRaw(title) != 9L & charToRaw(title) != 10L) || 
+      any(charToRaw(title) == 127L)) {
+    stop("Title contains invalid control characters")
+  }
+  
+  # Check length
+  if (nchar(title) > 500) {
+    stop("Title is too long (max 500 characters)")
+  }
+  
+  return(title)
+}
+
+.domino.sanitize.command <- function(command_parts) {
+  # Validate that command parts are strings
+  sanitized <- vapply(command_parts, function(x) {
+    if (!is.character(x) && !is.numeric(x)) {
+      stop("Command arguments must be strings or numbers")
+    }
+    
+    # Convert to string
+    cmd_str <- as.character(x)
+    
+    # Check for null bytes (can cause issues)
+    if (any(charToRaw(cmd_str) == 0L)) {
+      stop("Command arguments cannot contain null bytes")
+    }
+    
+    # Trim whitespace (but preserve the argument)
+    cmd_str <- trimws(cmd_str)
+    
+    return(cmd_str)
+  }, character(1))
+  
+  # Filter out empty strings (unless explicitly needed)
+  # Actually, let's keep empty strings - they might be intentional arguments
+  
+  return(sanitized)
+}
+
