@@ -37,15 +37,18 @@ Sys.setenv(DOMINO_USER_API_KEY = "your-api-key-here")
 Sys.setenv(DOMINO_API_HOST = "https://app.dominodatalab.com")
 
 # No need to call domino.login() - credentials are automatically used
-# Get the my-magic-project project from your Domino install
-domino.get("my-magic-project")
 
-# Trigger a run with some parameters
+# Trigger a run with some parameters (API mode)
+# When using API mode, specify project and owner explicitly
+domino.run("main.r", "--secret-arg", project = "my-project", owner = "my-username")
+
+# Or if running from within a Domino project directory, project/owner can be detected automatically
 domino.run("main.r", "--secret-arg")
 
-# Download changes from the domino server
-domino.download()
+# Note: domino.get() and domino.download() still require the Domino CLI (see below)
 ```
+
+**Note on API Support:** Currently, only `domino.run()` supports direct API integration without requiring the CLI. When using API mode with `domino.run()`, you may need to specify the `project` and `owner` parameters if not running from within a Domino project directory. Functions like `domino.get()`, `domino.upload()`, and `domino.download()` still require the Domino CLI to be installed. API support for these functions is planned for future releases.
 
 **Option 2: Using domino.login() for Programmatic Configuration**
 
@@ -59,8 +62,10 @@ domino.login(api_key = "your-api-key-here", host = "https://app.dominodatalab.co
 domino.login(token = "your-service-token-here", host = "https://app.dominodatalab.com")
 
 # Now use Domino functions
-domino.run("main.r", "--secret-arg")
-domino.upload("Updated code with new features")
+# When using API mode, specify project and owner if not running from project directory
+domino.run("main.r", "--secret-arg", project = "my-project", owner = "my-username")
+
+# Note: domino.upload() still requires the Domino CLI (see below)
 ```
 
 **Running Inside Domino**
@@ -72,8 +77,10 @@ When running code inside a Domino environment, authentication is handled automat
 library(domino)
 
 # Automatically authenticated - no login required!
-domino.run("main.r", "--secret-arg")
-domino.status()
+# When running inside Domino, you can specify project/owner or rely on auto-detection
+domino.run("main.r", "--secret-arg", project = "my-project", owner = "my-username")
+
+# Note: domino.status() still requires the Domino CLI (see below)
 ```
 
 ### Legacy CLI-Based Authentication

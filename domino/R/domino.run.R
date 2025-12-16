@@ -115,45 +115,65 @@ domino.run <- function(..., publishApiEndpoint = FALSE, project = NULL,
     }
   }
   
+  # Get projectId from project name and owner
+  # We need to look up the project ID using the API
+  project_id <- .domino.get.project.id(owner, project)
+  if (is.null(project_id)) {
+    stop(paste("Could not find project '", project, "' for owner '", owner, "'. Please verify the project name and owner.", sep = ""))
+  }
+  
   # Build command from arguments
-  # Convert all arguments to strings
+  # Convert all arguments to strings and join them
   cmd_parts <- vapply(args, function(x) {
     if (is.character(x)) x else as.character(x)
   }, character(1))
   
+  # Join command parts with spaces to form a single command string
   # For R scripts, check if we need to add Rscript
-  command <- cmd_parts
   if (length(cmd_parts) > 0) {
     first_arg <- cmd_parts[1]
     # If it's an R file, prepend Rscript
     if (grepl("\\.r$|\\.R$", first_arg, ignore.case = TRUE)) {
-      command <- c("Rscript", cmd_parts)
+      run_command <- paste(c("Rscript", cmd_parts), collapse = " ")
+    } else {
+      run_command <- paste(cmd_parts, collapse = " ")
     }
+  } else {
+    stop("No command provided to run")
   }
   
-  # Build API request payload
+  # Build API request payload according to /api/jobs/v1/jobs schema
   payload <- list(
-    command = command,
-    commitId = commitId
+    projectId = project_id,
+    runCommand = run_command
   )
+  
+  # Add optional fields
+  if (!is.null(commitId) && commitId != "master") {
+    payload$commitId <- commitId
+  }
   
   if (!is.null(title)) {
     payload$title <- title
   }
   
   # Make API request
-  endpoint <- paste0("/v4/projects/", owner, "/", project, "/runs")
+  endpoint <- "/api/jobs/v1/jobs"
   result <- .domino.api.request("POST", endpoint, body = payload)
   
   if (!result$success) {
-    stop("Failed to start run: ", result$error, call. = FALSE)
+    # Include URL in error message for debugging
+    url_info <- if (!is.null(result$url)) paste0(" (URL: ", result$url, ")") else ""
+    stop("Failed to start run", url_info, ": ", result$error, call. = FALSE)
   }
   
   # Return run information
   run_data <- result$data
   
   message("Run started successfully")
-  if (!is.null(run_data$runId)) {
+  if (!is.null(run_data$id)) {
+    message("Job ID: ", run_data$id)
+  } else if (!is.null(run_data$runId)) {
     message("Run ID: ", run_data$runId)
   }
   if (!is.null(run_data$status)) {
@@ -161,6 +181,42 @@ domino.run <- function(..., publishApiEndpoint = FALSE, project = NULL,
   }
   
   return(invisible(run_data))
+}
+
+# Get project ID from owner and project name
+.domino.get.project.id <- function(owner, project_name) {
+  # Try to get project by owner and name
+  # API endpoint: GET /v4/projects/{owner}/{projectName}
+  endpoint <- paste0("/v4/projects/", owner, "/", project_name)
+  result <- .domino.api.request("GET", endpoint)
+  
+  if (result$success && !is.null(result$data$id)) {
+    return(result$data$id)
+  }
+  
+  # If that doesn't work, try alternative endpoint formats
+  # Some APIs use /v4/projects?owner={owner}&name={name}
+  endpoint <- paste0("/v4/projects?owner=", owner, "&name=", project_name)
+  result <- .domino.api.request("GET", endpoint)
+  
+  if (result$success) {
+    # If it's a list, find the matching project
+    if (is.list(result$data)) {
+      if (is.data.frame(result$data) && "id" %in% names(result$data)) {
+        # If it's a data frame with an id column
+        return(result$data$id[1])
+      } else if (is.list(result$data) && length(result$data) > 0) {
+        # If it's a list of projects, find the one matching the name
+        for (proj in result$data) {
+          if (is.list(proj) && !is.null(proj$name) && proj$name == project_name) {
+            return(proj$id)
+          }
+        }
+      }
+    }
+  }
+  
+  return(NULL)
 }
 
 # Detect project from current directory
