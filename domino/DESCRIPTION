@@ -18,4 +18,4 @@ SystemRequirements: domino (~>1.7.1)
 URL: http://www.dominodatalab.com
 RoxygenNote: 5.0.1
 Suggests: testthat
-Imports: utils, grDevices
+Imports: utils, grDevices, httr
